@@ -1,7 +1,7 @@
 Fun project for educational reasons.
 
 This project attempts to create an 
-Endpoint detection prevention progam fo Windows.
+Endpoint detection response (EDR) progam fo Windows.
 Currently focusing on x64, Windows 10+
 
 In this project we implement as part of the EDR:
