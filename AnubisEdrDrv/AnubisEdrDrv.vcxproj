@@ -90,7 +90,10 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnbsCommons.h" />
     <ClInclude Include="AnubisDrv.h" />
+    <ClInclude Include="AnbsMemory.h" />
+    <ClInclude Include="AnbsList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp" />
