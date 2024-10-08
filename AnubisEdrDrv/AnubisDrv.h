@@ -12,6 +12,10 @@
 // TODO: Move to a dedicated memory managing file
 #define ANUBIS_MEM_TAG 'sbnA'
 
+// Device related defines
+#define DEVICE_NAME L"\\Device\\AnubisDevice"
+#define DEVICE_SYMLINK_NAME L"\\??\\AnubisDevice"
+
 // Unload routine for the driver
 VOID
 AnubisUnload(PDRIVER_OBJECT pDriverObject);
