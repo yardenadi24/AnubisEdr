@@ -22,7 +22,26 @@ AnubisWrite(PDEVICE_OBJECT pDeviceObject, PIRP pIrp);
 NTSTATUS
 AnubisIoCtl(PDEVICE_OBJECT pDeviceObject, PIRP pIrp);
 
+
+
 NTSTATUS
 CompleteIoRequest(PIRP Irp,
 	NTSTATUS status = STATUS_SUCCESS,
 	ULONG_PTR written = 0);
+
+// Process creation notification
+VOID
+ProcessCreationCallback(
+     PEPROCESS Process,
+     HANDLE ProcessId,
+     PPS_CREATE_NOTIFY_INFO CreateInfo
+    );
+
+// NT API
+extern "C"
+NTKERNELAPI
+PCHAR
+NTAPI
+PsGetProcessImageFileName(
+	_In_ PEPROCESS Process
+);

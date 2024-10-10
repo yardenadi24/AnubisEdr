@@ -22,6 +22,18 @@
     <ClInclude Include="AnubisDrv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnbsCommons.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp">

@@ -2,6 +2,12 @@
 #include <ntddk.h>
 #include "AnbsMemory.h"
 
+// An template list class
+// TODO:: Add iterator and general operators overloads
+//        In addition extra api for better use
+//        Test is required
+
+
 template<typename Data>
 class Element
 {

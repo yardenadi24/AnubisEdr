@@ -1,6 +1,11 @@
 #include "AnubisDrv.h"
 #include "AnbsCommons.h"
+#include "AnbsList.h"
+#include "AnbsProcess.h"
+#include "AnbsMemory.h"
 
+// Driver entry
+// TODO:: Move main logic to dedicated initialization function
 extern "C"
 NTSTATUS DriverEntry(
 	PDRIVER_OBJECT DriverObject,
@@ -21,7 +26,7 @@ NTSTATUS DriverEntry(
 			&DeviceName,
 			FILE_DEVICE_UNKNOWN,
 			0,
-			FALSE,
+			TRUE,
 			&pDeviceObj);
 
 		if (!NT_SUCCESS(Status))
@@ -30,13 +35,23 @@ NTSTATUS DriverEntry(
 			break;
 		}
 
-		// Create the SymLink
+		// Create the Symbolic link
 		UNICODE_STRING SymlinkName = RTL_CONSTANT_STRING(DEVICE_SYMLINK_NAME);
 
 		Status = IoCreateSymbolicLink(&SymlinkName, &DeviceName);
 		if (!NT_SUCCESS(Status))
 		{
 			DbgError("Failed creating Anubis symbolic link (0x%u).", Status);
+			break;
+		}
+
+		// Process creation notification
+		Status = PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessCreationCallback, FALSE);
+		if (!NT_SUCCESS(Status))
+		{
+			IoDeleteDevice(pDeviceObj);
+			IoDeleteSymbolicLink(&SymlinkName);
+			DbgError("Failed setting notify routine (0x%u).", Status);
 			break;
 		}
 
@@ -57,6 +72,9 @@ NTSTATUS DriverEntry(
 	return Status;
 }
 
+
+// Unload driver
+// TODO:: Create dedicated clean up function
 VOID
 AnubisUnload(PDRIVER_OBJECT pDriverObject)
 {
@@ -70,8 +88,12 @@ AnubisUnload(PDRIVER_OBJECT pDriverObject)
 	{
 		DbgError("Failed deleting Anubis symbolic link (0x%u).", Status);
 	}
+
+	// Process creation notification
+	PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessCreationCallback, TRUE);
 }
 
+// Complete IO request packet
 NTSTATUS
 CompleteIoRequest(PIRP Irp, NTSTATUS status, ULONG_PTR written)
 {
@@ -81,6 +103,7 @@ CompleteIoRequest(PIRP Irp, NTSTATUS status, ULONG_PTR written)
 	return status;
 }
 
+// Will be called on Create/Close calls
 NTSTATUS
 AnubisCreateClose(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 {
@@ -88,6 +111,7 @@ AnubisCreateClose(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 	return CompleteIoRequest(pIrp);
 }
 
+//  Will be called on Read calls
 NTSTATUS
 AnubisRead(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 {
@@ -95,6 +119,7 @@ AnubisRead(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 	return CompleteIoRequest(pIrp);
 }
 
+//  Will be called on Write calls
 NTSTATUS
 AnubisWrite(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 {
@@ -102,9 +127,54 @@ AnubisWrite(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 	return CompleteIoRequest(pIrp);
 }
 
+// Will be called on IO Control requests
 NTSTATUS
 AnubisIoCtl(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 {
 	UNREFERENCED_PARAMETER(pDeviceObject);
 	return CompleteIoRequest(pIrp);
+}
+
+// Call back for every process beinng created
+VOID
+ProcessCreationCallback(
+	PEPROCESS Process,
+	HANDLE ProcessId,
+	PPS_CREATE_NOTIFY_INFO CreateInfo
+)
+{
+
+	if (CreateInfo)
+	{
+		DbgInfo("Process creation: PID: %u '%s'", HandleToULong(ProcessId), PsGetProcessImageFileName(Process));
+		
+		// Allocate non paged memory for the process info struct
+		PPROCESS_INFO pProcessInfo = (PPROCESS_INFO)AllocMemory(sizeof(PROCESS_INFO));
+		if (pProcessInfo)
+		{
+			// Init
+			NTSTATUS Status;
+			if (!NT_SUCCESS(Status = pProcessInfo->Initialize(CreateInfo, ProcessId)))
+			{
+				DbgError("Failed initializing process info (%u)", Status);
+				return;
+			}
+			// Add to list
+			DbgInfo("Adding to process list process: (PID:%u) name: '%wZ', cmd: '%wZ'",
+					HandleToULong(ProcessId),
+					pProcessInfo->ImageFileName_,
+					pProcessInfo->CmdLine_);
+		
+			DbgInfo("Using Distractor to delete object");
+			pProcessInfo->FreeInternalMemory();
+
+			DbgInfo("Using Delete to delete object");
+			FreeMemory(pProcessInfo);
+		}
+	
+	}
+	else {
+
+		DbgInfo("Process termination: PID: %u '%s'", HandleToULong(ProcessId), PsGetProcessImageFileName(Process));
+	}
 }

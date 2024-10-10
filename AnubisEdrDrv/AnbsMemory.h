@@ -2,20 +2,14 @@
 #include <ntddk.h>
 #include "AnbsCommons.h"
 
-PVOID operator new(SIZE_T Size)
+#pragma warning(disable : 4996)
+
+PVOID AllocMemory(SIZE_T Size)
 {
-	PVOID Ptr = ExAllocatePoolWithTag(NonPagedPool, Size, ANUBIS_MEM_TAG);
-	if (Ptr != NULL)
-	{
-		RtlZeroMemory(Ptr,Size);
-	}
-	return Ptr;
+	return ExAllocatePoolWithTag(NonPagedPool, Size, ANUBIS_MEM_TAG);
 }
 
-VOID operator delete(PVOID Ptr)
+VOID FreeMemory(PVOID address)
 {
-	if (Ptr != NULL)
-	{
-		ExFreePoolWithTag(Ptr, ANUBIS_MEM_TAG);
-	}
+	ExFreePoolWithTag(address, ANUBIS_MEM_TAG);
 }
