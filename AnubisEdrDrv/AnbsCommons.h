@@ -2,6 +2,7 @@
 #include <ntddk.h>
 
 #define ANUBIS_PREFIX "Anubis: "
+#define MAX_PROCESSES 100
 
 // Some print macros
 #define DbgInfo(s,...) DbgPrint(ANUBIS_PREFIX "<Info>" "::%s:: " s "\n", __FUNCTION__, __VA_ARGS__)

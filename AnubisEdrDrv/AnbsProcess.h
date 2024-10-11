@@ -8,8 +8,9 @@
 typedef struct _PROCESS_INFO
 {
 public:
-    NTSTATUS Initialize(PPS_CREATE_NOTIFY_INFO CreateInfo, HANDLE ProcessId)
+    _PROCESS_INFO(PPS_CREATE_NOTIFY_INFO CreateInfo, HANDLE ProcessId)
 	{
+        DbgInfo("Constructor for process info (%u)", HandleToULong(ProcessId));
         PId_ = ProcessId;
         PPId_ = CreateInfo->ParentProcessId;
         CTId_ = CreateInfo->CreatingThreadId.UniqueThread;
@@ -21,31 +22,37 @@ public:
         // Allocate image name and command line
         if (CreateInfo->ImageFileName)
         {
-            ImageFileName_ = (PUNICODE_STRING)ExAllocatePoolWithTag(NonPagedPool, ((CreateInfo->ImageFileName->Length + 1) * sizeof(WCHAR)) + sizeof(UNICODE_STRING), PROCESS_MEM_TAG);
-            if (!ImageFileName_)
+            SIZE_T FileNameLength = ((CreateInfo->ImageFileName->Length + 1) * sizeof(WCHAR)) + sizeof(UNICODE_STRING);
+            ImageFileName_ = (PUNICODE_STRING)ExAllocatePoolWithTag(NonPagedPool, FileNameLength, PROCESS_MEM_TAG);
+            if (ImageFileName_ == NULL)
             {
                 Status = STATUS_NO_MEMORY;
                 DbgError("Failed allocating memory for process info (PID: %u)", HandleToULong(ProcessId));
-                return Status;
+                return;
             }
+
+            RtlZeroMemory(ImageFileName_, FileNameLength);
+
             PWCHAR ImageNameBuffer = (PWCHAR)((PUCHAR)ImageFileName_ + sizeof(UNICODE_STRING));
             RtlCopyMemory(ImageNameBuffer,
                 CreateInfo->ImageFileName->Buffer,
-                CreateInfo->ImageFileName->Length + 1);
+                CreateInfo->ImageFileName->Length);
             RtlInitUnicodeString(ImageFileName_, ImageNameBuffer);
         }
 
         if (CreateInfo->CommandLine)
         {
-
-            CmdLine_ = (PUNICODE_STRING)ExAllocatePoolWithTag(NonPagedPool, ((CreateInfo->CommandLine->Length + 1) * sizeof(WCHAR)) + sizeof(UNICODE_STRING), PROCESS_MEM_TAG);
-            if (!CmdLine_)
+            SIZE_T CmdLineLength = ((CreateInfo->CommandLine->Length + 1) * sizeof(WCHAR)) + sizeof(UNICODE_STRING);
+            CmdLine_ = (PUNICODE_STRING)ExAllocatePoolWithTag(NonPagedPool, CmdLineLength, PROCESS_MEM_TAG);
+            if (CmdLine_ == NULL)
             {
                 Status = STATUS_NO_MEMORY;
                 ExFreePoolWithTag(ImageFileName_, PROCESS_MEM_TAG);
                 DbgError("Failed allocating memory for process info (PID: %u)", HandleToULong(ProcessId));
-                return Status;
+                return;
             }
+
+            RtlZeroMemory(CmdLine_, CmdLineLength);
 
             PWCHAR CmdLineBuffer = (PWCHAR)((PUCHAR)CmdLine_ + sizeof(UNICODE_STRING));
             RtlCopyMemory(CmdLineBuffer,
@@ -54,11 +61,12 @@ public:
             RtlInitUnicodeString(CmdLine_, CmdLineBuffer);
         }
 
-        return Status;
+        return;
 	}
 
-    VOID FreeInternalMemory()
+    VOID FreeProcessInfo()
     {
+        DbgInfo("Destructor for process info (%u)", HandleToULong(PId_));
         if(ImageFileName_)
             ExFreePoolWithTag(ImageFileName_, PROCESS_MEM_TAG);
         if(CmdLine_)

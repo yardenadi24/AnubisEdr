@@ -109,11 +109,12 @@
     <ClInclude Include="AnbsCommons.h" />
     <ClInclude Include="AnbsProcess.h" />
     <ClInclude Include="AnubisDrv.h" />
-    <ClInclude Include="AnbsMemory.h" />
     <ClInclude Include="AnbsList.h" />
+    <ClInclude Include="AnbsNew.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp" />
+    <ClCompile Include="AnbsNew.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

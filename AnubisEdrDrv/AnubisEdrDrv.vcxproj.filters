@@ -17,6 +17,12 @@
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
+    <Filter Include="Source Files\KernelCommonLibs">
+      <UniqueIdentifier>{05594293-2a32-4b19-bf48-65d521244eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\KernelCommonLibs">
+      <UniqueIdentifier>{8ef683ea-e9b1-4dcf-ba9b-3fbcee137e5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnubisDrv.h">
@@ -25,19 +31,22 @@
     <ClInclude Include="AnbsCommons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AnbsMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AnbsList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AnbsProcess.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsNew.h">
+      <Filter>Header Files\KernelCommonLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsList.h">
+      <Filter>Header Files\KernelCommonLibs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnbsNew.cpp">
+      <Filter>Source Files\KernelCommonLibs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

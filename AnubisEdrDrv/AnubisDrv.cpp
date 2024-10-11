@@ -1,8 +1,12 @@
 #include "AnubisDrv.h"
 #include "AnbsCommons.h"
 #include "AnbsList.h"
+#include "AnbsNew.h"
 #include "AnbsProcess.h"
-#include "AnbsMemory.h"
+
+List<PROCESS_INFO>* g_pProcessList;
+SIZE_T g_MaxProcess;
+FAST_MUTEX g_Mutex;
 
 // Driver entry
 // TODO:: Move main logic to dedicated initialization function
@@ -69,6 +73,10 @@ NTSTATUS DriverEntry(
 		DbgError("Failed loading Anubis driver (0x%u).", Status);
 	}
 
+	g_pProcessList = new (NonPagedPool) List<PROCESS_INFO>(&g_Mutex);
+	g_MaxProcess = MAX_PROCESSES;
+
+	DbgInfo("Allocated process list(MAX = %u) in : (0x%p)",g_MaxProcess ,g_pProcessList);
 	return Status;
 }
 
@@ -91,6 +99,9 @@ AnubisUnload(PDRIVER_OBJECT pDriverObject)
 
 	// Process creation notification
 	PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessCreationCallback, TRUE);
+	
+	g_pProcessList->FreeList();
+	delete g_pProcessList;
 }
 
 // Complete IO request packet
@@ -135,7 +146,7 @@ AnubisIoCtl(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 	return CompleteIoRequest(pIrp);
 }
 
-// Call back for every process beinng created
+// Call back for every process being created
 VOID
 ProcessCreationCallback(
 	PEPROCESS Process,
@@ -149,32 +160,43 @@ ProcessCreationCallback(
 		DbgInfo("Process creation: PID: %u '%s'", HandleToULong(ProcessId), PsGetProcessImageFileName(Process));
 		
 		// Allocate non paged memory for the process info struct
-		PPROCESS_INFO pProcessInfo = (PPROCESS_INFO)AllocMemory(sizeof(PROCESS_INFO));
+		PPROCESS_INFO pProcessInfo = new (NonPagedPool) _PROCESS_INFO(CreateInfo, ProcessId);
 		if (pProcessInfo)
 		{
-			// Init
-			NTSTATUS Status;
-			if (!NT_SUCCESS(Status = pProcessInfo->Initialize(CreateInfo, ProcessId)))
-			{
-				DbgError("Failed initializing process info (%u)", Status);
-				return;
-			}
 			// Add to list
-			DbgInfo("Adding to process list process: (PID:%u) name: '%wZ', cmd: '%wZ'",
-					HandleToULong(ProcessId),
-					pProcessInfo->ImageFileName_,
-					pProcessInfo->CmdLine_);
-		
-			DbgInfo("Using Distractor to delete object");
-			pProcessInfo->FreeInternalMemory();
+			DbgInfo("Adding to process list process (%u/%u): (PID:%u) name: '%wZ', cmd: '%wZ'",
+				g_pProcessList->GetSize(),
+				MAX_PROCESSES,
+				HandleToULong(ProcessId),
+				pProcessInfo->ImageFileName_,
+				pProcessInfo->CmdLine_);
 
-			DbgInfo("Using Delete to delete object");
-			FreeMemory(pProcessInfo);
+			if (!g_pProcessList->Add(pProcessInfo, HandleToULong(ProcessId)))
+			{
+				DbgError("Failed adding process to list");
+				pProcessInfo->FreeProcessInfo();
+				delete pProcessInfo;
+			}
+
+			//DbgInfo("Using Delete to delete object");
+			//pProcessInfo->FreeProcessInfo();
+			//delete pProcessInfo;
 		}
 	
 	}
 	else {
-
-		DbgInfo("Process termination: PID: %u '%s'", HandleToULong(ProcessId), PsGetProcessImageFileName(Process));
+		PPROCESS_INFO pProcessInfo = g_pProcessList->GetDataById(HandleToULong(ProcessId));
+		if (pProcessInfo == NULL)
+		{
+			DbgError("Couldnt find process id in list to remove it. (%u)", HandleToULong(ProcessId));
+			return;
+		}
+		DbgInfo("Terminated: Removing process list process (%u/%u): (PID:%u) name: '%wZ', cmd: '%wZ'",
+			g_pProcessList->GetSize(),
+			MAX_PROCESSES,
+			HandleToULong(ProcessId),
+			pProcessInfo->ImageFileName_,
+			pProcessInfo->CmdLine_);
+		g_pProcessList->RemoveByData(pProcessInfo);
 	}
 }
