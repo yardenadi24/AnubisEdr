@@ -40,6 +40,12 @@
     <ClInclude Include="AnbsList.h">
       <Filter>Header Files\KernelCommonLibs</Filter>
     </ClInclude>
+    <ClInclude Include="IoctlCodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ioctl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp">
@@ -47,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="AnbsNew.cpp">
       <Filter>Source Files\KernelCommonLibs</Filter>
+    </ClCompile>
+    <ClCompile Include="Ioctl.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

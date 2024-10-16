@@ -3,6 +3,7 @@
 #include "AnbsList.h"
 #include "AnbsNew.h"
 #include "AnbsProcess.h"
+#include "Ioctl.h"
 
 List<PROCESS_INFO>* g_pProcessList;
 SIZE_T g_MaxProcess;
@@ -66,6 +67,8 @@ NTSTATUS DriverEntry(
 		DriverObject->MajorFunction[IRP_MJ_WRITE] = AnubisWrite;
 		DriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = AnubisIoCtl;
 
+		DriverObject->Flags |= DO_BUFFERED_IO;
+
 	} while (false);
 
 	if (!NT_SUCCESS(Status))
@@ -127,6 +130,17 @@ NTSTATUS
 AnubisRead(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 {
 	UNREFERENCED_PARAMETER(pDeviceObject);
+
+	NTSTATUS Status = STATUS_SUCCESS;
+
+	PIO_STACK_LOCATION IrpSp = IoGetCurrentIrpStackLocation(pIrp);
+
+	ULONG Info = 0;
+	
+	auto ReadParams = IrpSp->Parameters.Read;
+
+	if(ReadParams.Length < )
+
 	return CompleteIoRequest(pIrp);
 }
 
