@@ -1,61 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Driver Files">
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
-    <Filter Include="Source Files\KernelCommonLibs">
-      <UniqueIdentifier>{05594293-2a32-4b19-bf48-65d521244eec}</UniqueIdentifier>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Header Files\KernelCommonLibs">
-      <UniqueIdentifier>{8ef683ea-e9b1-4dcf-ba9b-3fbcee137e5b}</UniqueIdentifier>
+    <Filter Include="EdrDrv">
+      <UniqueIdentifier>{5f3da0df-c982-4495-8aff-060dfa67d34d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\CustomKernelLib">
+      <UniqueIdentifier>{4148129b-557c-4576-a807-50ffedc0c98d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\KernelLogger">
+      <UniqueIdentifier>{20a17b75-8d61-4f4e-9c55-098cf8aaed04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\Common">
+      <UniqueIdentifier>{58fe06c6-c808-40cd-b688-39023106ddd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\Ioctl">
+      <UniqueIdentifier>{9773c6cf-2644-4c6a-8676-70ad707a7816}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnubisDrv.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AnbsCommons.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AnbsProcess.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AnbsNew.h">
-      <Filter>Header Files\KernelCommonLibs</Filter>
+      <Filter>EdrDrv</Filter>
     </ClInclude>
     <ClInclude Include="AnbsList.h">
-      <Filter>Header Files\KernelCommonLibs</Filter>
+      <Filter>Utils\CustomKernelLib</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsNew.h">
+      <Filter>Utils\CustomKernelLib</Filter>
+    </ClInclude>
+    <ClInclude Include="AnubisDrv.h">
+      <Filter>EdrDrv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AnubisAgent\KernLogger.h">
+      <Filter>Utils\KernelLogger</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsCommons.h">
+      <Filter>EdrDrv\Common</Filter>
     </ClInclude>
     <ClInclude Include="IoctlCodes.h">
-      <Filter>Header Files</Filter>
+      <Filter>EdrDrv\Common</Filter>
     </ClInclude>
     <ClInclude Include="Ioctl.h">
-      <Filter>Header Files</Filter>
+      <Filter>EdrDrv\Ioctl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>EdrDrv</Filter>
     </ClCompile>
     <ClCompile Include="AnbsNew.cpp">
-      <Filter>Source Files\KernelCommonLibs</Filter>
+      <Filter>Utils\CustomKernelLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\AnubisAgent\KernLogger.cpp">
+      <Filter>Utils\KernelLogger</Filter>
     </ClCompile>
     <ClCompile Include="Ioctl.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>EdrDrv\Ioctl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

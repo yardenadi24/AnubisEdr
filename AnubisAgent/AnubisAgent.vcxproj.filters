@@ -24,9 +24,6 @@
     <ClCompile Include="AnubisAgent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KernLogger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LoggerTest.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KernLogger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LoggerTester.h">
       <Filter>Tests</Filter>
     </ClInclude>

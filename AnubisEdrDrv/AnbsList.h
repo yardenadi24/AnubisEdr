@@ -116,7 +116,7 @@ public:
 		ExAcquireFastMutex(Mutex_);
 		PLIST_ENTRY pListEntry = Head_.Flink;
 		Data* pRetData = NULL;
-		while (pListEntry != &Head_) {
+		while (pListEntry1 != &Head_) {
 			Element<Data>* pElem = CONTAINING_RECORD(pListEntry, Element<Data>, ListEntry_);
 			if (pElem->Id_ == Id) {
 				pRetData = pElem->pData_;

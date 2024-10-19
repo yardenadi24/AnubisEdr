@@ -106,6 +106,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\AnubisAgent\KernLogger.h" />
     <ClInclude Include="AnbsCommons.h" />
     <ClInclude Include="AnbsProcess.h" />
     <ClInclude Include="AnubisDrv.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="IoctlCodes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\AnubisAgent\KernLogger.cpp" />
     <ClCompile Include="AnubisDrv.cpp" />
     <ClCompile Include="AnbsNew.cpp" />
     <ClCompile Include="Ioctl.cpp" />

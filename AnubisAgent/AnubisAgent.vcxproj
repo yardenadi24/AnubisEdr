@@ -132,12 +132,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnubisAgent.cpp" />
-    <ClCompile Include="KernLogger.cpp" />
     <ClCompile Include="LoggerTest.cpp" />
     <ClCompile Include="ThreadPoolTester.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KernLogger.h" />
     <ClInclude Include="LoggerTester.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadPoolTester.h" />
