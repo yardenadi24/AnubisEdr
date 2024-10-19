@@ -112,14 +112,18 @@
     <ClInclude Include="AnubisDrv.h" />
     <ClInclude Include="AnbsList.h" />
     <ClInclude Include="AnbsNew.h" />
+    <ClInclude Include="Atomic.h" />
     <ClInclude Include="Ioctl.h" />
     <ClInclude Include="IoctlCodes.h" />
+    <ClInclude Include="ProcessMonitor.h" />
+    <ClInclude Include="SmartPtr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\AnubisAgent\KernLogger.cpp" />
     <ClCompile Include="AnubisDrv.cpp" />
     <ClCompile Include="AnbsNew.cpp" />
     <ClCompile Include="Ioctl.cpp" />
+    <ClCompile Include="ProcessMonitor.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

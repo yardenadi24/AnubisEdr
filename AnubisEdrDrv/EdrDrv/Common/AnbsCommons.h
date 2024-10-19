@@ -1,5 +1,6 @@
 #pragma once
 #include <ntddk.h>
+#include "../KernelCommonLibs/Atomic.h"
 
 #define ANUBIS_PREFIX "Anubis: "
 #define MAX_PROCESSES 100
@@ -12,3 +13,14 @@
 // Memory tags
 // TODO: Move to a dedicated memory managing file
 #define ANUBIS_MEM_TAG 'sbnA'
+
+
+typedef struct _ANUBIS_COMMON_GLOBAL_DATA
+{
+	AtomicBool ProcMonStarted_;
+
+}ANUBIS_COMMON_GLOBAL_DATA, *PANUBIS_COMMON_GLOBAL_DATA;
+
+
+
+extern PANUBIS_COMMON_GLOBAL_DATA g_pCommonData;

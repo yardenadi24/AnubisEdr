@@ -1,5 +1,5 @@
 #pragma once
-#include "IoctlCodes.h"
+#include "../Common/IoctlCodes.h"
 
 VOID AnubisDeviceIoControl()
 {

@@ -1,5 +1,6 @@
 #pragma once
 #include <ntddk.h>
+#include "../Common/AnbsCommons.h"
 
 #define PROCESS_MEM_TAG 'corP'
 #define MAX_PATH 256

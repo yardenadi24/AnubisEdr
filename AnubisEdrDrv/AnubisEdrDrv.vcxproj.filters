@@ -5,18 +5,8 @@
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
-    <Filter Include="Utils">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="EdrDrv">
       <UniqueIdentifier>{5f3da0df-c982-4495-8aff-060dfa67d34d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utils\CustomKernelLib">
-      <UniqueIdentifier>{4148129b-557c-4576-a807-50ffedc0c98d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utils\KernelLogger">
-      <UniqueIdentifier>{20a17b75-8d61-4f4e-9c55-098cf8aaed04}</UniqueIdentifier>
     </Filter>
     <Filter Include="EdrDrv\Common">
       <UniqueIdentifier>{58fe06c6-c808-40cd-b688-39023106ddd4}</UniqueIdentifier>
@@ -24,22 +14,40 @@
     <Filter Include="EdrDrv\Ioctl">
       <UniqueIdentifier>{9773c6cf-2644-4c6a-8676-70ad707a7816}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EdrDrv\ProcessMonitor">
+      <UniqueIdentifier>{8aa31984-b7ad-4097-8f20-f36d9155f2d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\SystemMonitor">
+      <UniqueIdentifier>{147fb3b2-b605-4687-935f-229127547aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\MinFltFs">
+      <UniqueIdentifier>{6f5c0255-6edf-40dc-b503-441d5d9c6751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\MinFltNet">
+      <UniqueIdentifier>{92a77e6a-5acf-4c97-8da1-f9ebb07eca0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\FileSystemMonitor">
+      <UniqueIdentifier>{873927f4-01b3-4764-a949-d7f687b2fa02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\NetworkMonitor">
+      <UniqueIdentifier>{293ea087-69d5-4511-84ef-1cbfa903fb8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\KernelCommonLibs">
+      <UniqueIdentifier>{3f97732b-3f75-4457-9d77-2c2887a88086}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\RegistryMonitor">
+      <UniqueIdentifier>{5f0b7f68-b11e-42d5-98e6-9692704a8443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\Utils">
+      <UniqueIdentifier>{c6f152c8-6ac1-4486-891a-33b0218d0a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EdrDrv\Utils\KLogger">
+      <UniqueIdentifier>{a415779b-1cf9-4ba4-bcfa-cf9c0e232548}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnbsProcess.h">
-      <Filter>EdrDrv</Filter>
-    </ClInclude>
-    <ClInclude Include="AnbsList.h">
-      <Filter>Utils\CustomKernelLib</Filter>
-    </ClInclude>
-    <ClInclude Include="AnbsNew.h">
-      <Filter>Utils\CustomKernelLib</Filter>
-    </ClInclude>
     <ClInclude Include="AnubisDrv.h">
       <Filter>EdrDrv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\AnubisAgent\KernLogger.h">
-      <Filter>Utils\KernelLogger</Filter>
     </ClInclude>
     <ClInclude Include="AnbsCommons.h">
       <Filter>EdrDrv\Common</Filter>
@@ -50,19 +58,43 @@
     <ClInclude Include="Ioctl.h">
       <Filter>EdrDrv\Ioctl</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessMonitor.h">
+      <Filter>EdrDrv\ProcessMonitor</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsProcess.h">
+      <Filter>EdrDrv\ProcessMonitor</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsList.h">
+      <Filter>EdrDrv\KernelCommonLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="AnbsNew.h">
+      <Filter>EdrDrv\KernelCommonLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="Atomic.h">
+      <Filter>EdrDrv\KernelCommonLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="SmartPtr.h">
+      <Filter>EdrDrv\KernelCommonLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AnubisAgent\KernLogger.h">
+      <Filter>EdrDrv\Utils\KLogger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnubisDrv.cpp">
       <Filter>EdrDrv</Filter>
     </ClCompile>
-    <ClCompile Include="AnbsNew.cpp">
-      <Filter>Utils\CustomKernelLib</Filter>
-    </ClCompile>
-    <ClCompile Include="..\AnubisAgent\KernLogger.cpp">
-      <Filter>Utils\KernelLogger</Filter>
-    </ClCompile>
     <ClCompile Include="Ioctl.cpp">
       <Filter>EdrDrv\Ioctl</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMonitor.cpp">
+      <Filter>EdrDrv\ProcessMonitor</Filter>
+    </ClCompile>
+    <ClCompile Include="AnbsNew.cpp">
+      <Filter>EdrDrv\KernelCommonLibs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\AnubisAgent\KernLogger.cpp">
+      <Filter>EdrDrv\Utils\KLogger</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

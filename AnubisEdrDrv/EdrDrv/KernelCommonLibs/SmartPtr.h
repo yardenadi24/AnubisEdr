@@ -2,14 +2,14 @@
 
 #include <ntddk.h>
 
-#include "AnbsCommons.h"
+#include "../Common/AnbsCommons.h"
 
 #define SMART_PTR_MEM_TAG 'rtpS'
 
 typedef struct _SMART_PTR_DATA
 {
 	PVOID pData_ = NULL;
-	LONG Count_ = 0;
+	volatile LONG Count_ = 0;
 	BOOLEAN Initialized_ = FALSE;
 
 	VOID Init(PVOID pData)

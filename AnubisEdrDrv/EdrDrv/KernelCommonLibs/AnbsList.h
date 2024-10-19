@@ -1,5 +1,4 @@
 #pragma once
-#include <ntddk.h>
 #include "AnbsNew.h"
 
 // An template list class

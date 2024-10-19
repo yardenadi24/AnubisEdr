@@ -1,13 +1,14 @@
 #include "AnubisDrv.h"
-#include "AnbsCommons.h"
-#include "AnbsList.h"
-#include "AnbsNew.h"
-#include "AnbsProcess.h"
-#include "Ioctl.h"
+#include "./Common/AnbsCommons.h"
+#include "./KernelCommonLibs/AnbsList.h"
+#include "./KernelCommonLibs/AnbsNew.h"
+#include "./ProcessMonitor/AnbsProcess.h"
+#include "./ProcessMonitor/ProcessMonitor.h"
+#include "./Ioctl/Ioctl.h"
 
-List<PROCESS_INFO>* g_pProcessList;
 SIZE_T g_MaxProcess;
 FAST_MUTEX g_Mutex;
+PANUBIS_COMMON_GLOBAL_DATA g_pCommonData;
 
 // Driver entry
 // TODO:: Move main logic to dedicated initialization function
@@ -50,8 +51,8 @@ NTSTATUS DriverEntry(
 			break;
 		}
 
-		// Process creation notification
-		Status = PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessCreationCallback, FALSE);
+		// Process monitoring
+		Status = monitor::process::Initialize();
 		if (!NT_SUCCESS(Status))
 		{
 			IoDeleteDevice(pDeviceObj);
@@ -76,10 +77,6 @@ NTSTATUS DriverEntry(
 		DbgError("Failed loading Anubis driver (0x%u).", Status);
 	}
 
-	g_pProcessList = new (NonPagedPool) List<PROCESS_INFO>(&g_Mutex);
-	g_MaxProcess = MAX_PROCESSES;
-
-	DbgInfo("Allocated process list(MAX = %u) in : (0x%p)",g_MaxProcess ,g_pProcessList);
 	return Status;
 }
 
@@ -90,6 +87,8 @@ VOID
 AnubisUnload(PDRIVER_OBJECT pDriverObject)
 {
 	DbgInfo("Unloading Anubis 0x%p", pDriverObject);
+	
+	monitor::process::Finalize();
 
 	IoDeleteDevice(pDriverObject->DeviceObject);
 
@@ -99,12 +98,7 @@ AnubisUnload(PDRIVER_OBJECT pDriverObject)
 	{
 		DbgError("Failed deleting Anubis symbolic link (0x%u).", Status);
 	}
-
-	// Process creation notification
-	PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems, ProcessCreationCallback, TRUE);
 	
-	g_pProcessList->FreeList();
-	delete g_pProcessList;
 }
 
 // Complete IO request packet
@@ -139,8 +133,6 @@ AnubisRead(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 	
 	auto ReadParams = IrpSp->Parameters.Read;
 
-	if(ReadParams.Length < )
-
 	return CompleteIoRequest(pIrp);
 }
 
@@ -160,57 +152,3 @@ AnubisIoCtl(PDEVICE_OBJECT pDeviceObject, PIRP pIrp)
 	return CompleteIoRequest(pIrp);
 }
 
-// Call back for every process being created
-VOID
-ProcessCreationCallback(
-	PEPROCESS Process,
-	HANDLE ProcessId,
-	PPS_CREATE_NOTIFY_INFO CreateInfo
-)
-{
-
-	if (CreateInfo)
-	{
-		DbgInfo("Process creation: PID: %u '%s'", HandleToULong(ProcessId), PsGetProcessImageFileName(Process));
-		
-		// Allocate non paged memory for the process info struct
-		PPROCESS_INFO pProcessInfo = new (NonPagedPool) _PROCESS_INFO(CreateInfo, ProcessId);
-		if (pProcessInfo)
-		{
-			// Add to list
-			DbgInfo("Adding to process list process (%u/%u): (PID:%u) name: '%wZ', cmd: '%wZ'",
-				g_pProcessList->GetSize(),
-				MAX_PROCESSES,
-				HandleToULong(ProcessId),
-				pProcessInfo->ImageFileName_,
-				pProcessInfo->CmdLine_);
-
-			if (!g_pProcessList->Add(pProcessInfo, HandleToULong(ProcessId)))
-			{
-				DbgError("Failed adding process to list");
-				pProcessInfo->FreeProcessInfo();
-				delete pProcessInfo;
-			}
-
-			//DbgInfo("Using Delete to delete object");
-			//pProcessInfo->FreeProcessInfo();
-			//delete pProcessInfo;
-		}
-	
-	}
-	else {
-		PPROCESS_INFO pProcessInfo = g_pProcessList->GetDataById(HandleToULong(ProcessId));
-		if (pProcessInfo == NULL)
-		{
-			DbgError("Couldnt find process id in list to remove it. (%u)", HandleToULong(ProcessId));
-			return;
-		}
-		DbgInfo("Terminated: Removing process list process (%u/%u): (PID:%u) name: '%wZ', cmd: '%wZ'",
-			g_pProcessList->GetSize(),
-			MAX_PROCESSES,
-			HandleToULong(ProcessId),
-			pProcessInfo->ImageFileName_,
-			pProcessInfo->CmdLine_);
-		g_pProcessList->RemoveByData(pProcessInfo);
-	}
-}
